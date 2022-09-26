@@ -1,11 +1,5 @@
 
 Tube
-0
-0
--1
-
-KS
-
-0
-0
-0
+Length:2
+Diametr3
+Maintenance:1
