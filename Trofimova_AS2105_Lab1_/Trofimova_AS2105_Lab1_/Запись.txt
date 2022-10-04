@@ -1,5 +1,5 @@
 
 Tube
-Length:4
-Diametr6
+Length:3
+Diametr:2
 Maintenance:1

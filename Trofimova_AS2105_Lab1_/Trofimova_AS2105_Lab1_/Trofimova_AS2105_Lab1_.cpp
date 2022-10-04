@@ -17,60 +17,65 @@ struct KS
 	float efficiency=0;
 };
 
-float numeric_check(float l)
+float number_check()
 {
-	while (((cin >> l).fail()) || (cin.peek() != '\n') || (l <= 0))
+	float number;
+	while (((cin >> number).fail()) || (cin.peek() != '\n') || (number <= 0))
 	{
 		cout << ("Enter number > 0.\n");
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
-	return l;
+	return number;
 }
 
-bool maint_check(bool m)
+bool maintenance_check()
 {
-	while (((cin >> m).fail()) || (cin.peek() != '\n'))
+	bool Maintenance;
+	while (((cin >> Maintenance).fail()) || (cin.peek() != '\n'))
 	{
 		cout << ("Enter 0 or 1.\n");
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
-	return m;
+	return Maintenance;
 }
 
-string maint_check_2(bool m)
+string maintenance(bool Maintenance)
 {
-	if (m == true)
+	if (Maintenance == true)
 		return ("Tube is in maintenance\n");
-	else if (m == false)
+	else if (Maintenance == false)
 		return ("Tube works\n");
 }
 
-int numeric_check_2(int w)
+int integer_check()
 {
-	while (((cin>>w).fail())||(cin.peek()!='\n')||(w<=0))
+	int workshop;
+	while (((cin>>workshop).fail())||(cin.peek()!='\n')||(workshop<=0))
 	{
 		cout << ("Enter integer number > 0.")<<endl;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
-	return w;
+	return workshop;
 }
 
-int working_worshops_check(int ww, int w)
+int working_worshops_check(int workshop)
 {
-	while (((cin>>ww).fail())||(cin.peek()!='\n')||(ww<0)||(ww>w))
+	int working_workshop;
+	while (((cin>>working_workshop).fail())||(cin.peek()!='\n')||(working_workshop <=0)||(working_workshop >workshop))
 	{
 		cout << ("Enter integer number > 0 and less than total amount of workshops.")<<endl;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
-	return ww;
+	return working_workshop;
 }
 
-int check_opt(int menu)
+int check_menu()
 {
+	int menu;
 	while (((cin >> menu).fail()) || (cin.peek() != '\n'))
 	{
 		cout << "Input number between 0 and 7" << endl;
@@ -79,44 +84,36 @@ int check_opt(int menu)
 	}
 	return menu;
 }
-void clear_file()
-{
-	ofstream out;
-	out.open("Запись.txt", ofstream::out | ofstream::trunc);
-	out.close();
-	cout<< "File is empty.\n";
-	return ;
-}
-void case_1(Tube& tb)
+void add_tube(Tube& tb)
 {
 	cout << "\nLength:";
-	tb.length = numeric_check(tb.length);
+	tb.length = number_check();
 	cout << "\nDiametr:";
-	tb.diametr = numeric_check(tb.diametr);
+	tb.diametr = number_check();
 	cout << "\nEnter 0 if tube is in repair and 1 if it works:";
-	tb.maintenance = maint_check(tb.maintenance);
-	cout << maint_check_2(tb.maintenance) << endl;
+	tb.maintenance = maintenance_check();
+	cout << maintenance(tb.maintenance) << endl;
 }
-void case_2(KS& ks)
+void add_ks(KS& ks)
 {
 	cout << "\nName:";
 	cin.clear();
 	cin.ignore(INT_MAX, '\n');
 	getline(cin,ks.name);
 	cout << "\nTotal number of workshops:";
-	ks.workshops = numeric_check_2(ks.workshops);
+	ks.workshops = integer_check();
 	cout << "\nNumber of working workshops:";
-	ks.workingWork = working_worshops_check(ks.workingWork, ks.workshops);
+	ks.workingWork = working_worshops_check(ks.workshops);
 	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
 	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
 }
-void case_3(Tube& tb, KS& ks)
+void added_objects(Tube& tb, KS& ks)
 {
 	if (tb.length == 0)
 		cout << "There is no tube.\n";
 	else
 		cout << "\nTube.\n" << "\nLength:" << tb.length << "\nDiametr:"
-		<< tb.diametr << "\nMaintanance:" << maint_check_2(tb.maintenance) << endl;
+		<< tb.diametr << "\nMaintanance:" << maintenance(tb.maintenance) << endl;
 	if (ks.name == "")
 		cout << "There is no KS.\n";
 	else
@@ -124,33 +121,36 @@ void case_3(Tube& tb, KS& ks)
 		<< ks.workshops << "\nNumber of working workshops:" << ks.workingWork
 		<< "\nEfficiency:" << ks.efficiency << endl;
 }
-void case_4(Tube& tb)
+void edit_tube(Tube& tb)
 {
 	if (tb.maintenance == 0)
 	{
 		cout << "There is no tube to edit.\n";
 	}
 	if (tb.maintenance != 0)
+	{
 		cout << "\nInput new tube status (Enter 0 if tube is in repair and 1 if it works):";
-	cin >> tb.maintenance;
-	tb.maintenance = maint_check(tb.maintenance);
-	cout << maint_check_2(tb.maintenance) << endl;
+		tb.maintenance = maintenance_check();
+		cout << maintenance(tb.maintenance) << endl;
+	}
 }
-void case_5(KS& ks)
+void edit_ks(KS& ks)
 {
-	if (ks.workshops == 0)
+	if (ks.workshops == -1)
 	{
 		cout << "There are no workshops to edit.\n";
 	}
-	if (ks.workshops != 0)
+	if (ks.workshops != -1)
+	{
 		cout << "\nWorkshops:";
-	ks.workshops = numeric_check_2(ks.workshops);
-	cout << "\nNumber of working workshops:";
-	ks.workingWork = working_worshops_check(ks.workingWork, ks.workshops);
-	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
-	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
+		ks.workshops = integer_check();
+		cout << "\nNumber of working workshops:";
+		ks.workingWork = working_worshops_check( ks.workshops);
+		ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
+		cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
+	}
 }
-void case_6(Tube& tb, KS& ks)
+void load_to_file(Tube& tb, KS& ks)
 {
 	if ((ks.name == "") & (tb.length == 0))
 	{
@@ -186,10 +186,8 @@ void case_6(Tube& tb, KS& ks)
 		fout.close();
 	}
 }
-void case_7(Tube&tb, KS&ks)
+void read_from_file(Tube&tb, KS&ks)
 {
-	if ((ks.name == "") & (tb.length == 0))
-		clear_file();
 	string line;
 	ifstream fin;
 	fin.open("Запись.txt");
@@ -213,42 +211,42 @@ int main()
 		cout << "1.Add new tube.\n" << "2.Add new KS.\n" << "3.Added objects.\n"
 			<< "4.Change tube.\n" << "5.Change KS.\n" << "6.Add to file\n"
 			<< "7.Load from file.\n" << "0.Exit\n" << ">";
-		menu = check_opt(menu);
+		menu = check_menu();
 		switch (menu)
 		{
 		case 1:
 		{
-			case_1(tb);
+			add_tube(tb);
 			break;
 		}
 		case 2:
 		{
-			case_2(ks);
+			add_ks(ks);
 			break;
 		}
 		case 3:
 		{
-			case_3(tb,ks);
+			added_objects(tb,ks);
 			break;
 		}
 		case 4:
 		{	
-			case_4(tb);
+			edit_tube(tb);
 			break;
 		}
 		case 5:
 		{
-			case_5(ks);
+			edit_ks(ks);
 			break;
 		}
 		case 6:
 		{
-			case_6(tb, ks);
+			load_to_file(tb, ks);
 			break;
 		}
 		case 7:
 		{
-			case_7(tb, ks);
+			read_from_file(tb, ks);
 			break;
 		}
 		case 0:
@@ -256,7 +254,7 @@ int main()
 			return 0;
 		}
 		default:
-			check_opt(menu);
+			cout << "Input correct number between 0 and 7.\n";
 			break;
 		}
 	}
