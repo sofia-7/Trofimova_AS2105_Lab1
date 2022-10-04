@@ -7,48 +7,43 @@ using namespace std;
 struct Tube
 {
 	float length=0, diametr=0;
-	int maintenance=0;
+	bool maintenance=0;
 };
 
 struct KS
 {
 	string name="";
-	int workshops=0, workingWork=0;
+	int workshops=-1, workingWork=-1;
 	float efficiency=0;
 };
 
-Tube tb;
-KS ks;
-
 float numeric_check(float l)
 {
-	while ((l <= 0) || (!l))
+	while (((cin >> l).fail()) || (cin.peek() != '\n') || (l <= 0))
 	{
 		cout << ("Enter number > 0.\n");
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
-		cin >> l;
 	}
 	return l;
 }
 
-int maint_check(int m)
+bool maint_check(bool m)
 {
-	while ((!m) || (m < 1) || (m > 2))
+	while (((cin >> m).fail()) || (cin.peek() != '\n'))
 	{
-		cout << ("Enter 1 or 2.\n");
+		cout << ("Enter 0 or 1.\n");
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
-		cin >> m;
 	}
 	return m;
 }
 
-string maint_check_2(int m)
+string maint_check_2(bool m)
 {
-	if (m == 1)
+	if (m == true)
 		return ("Tube is in maintenance\n");
-	else
+	else if (m == false)
 		return ("Tube works\n");
 }
 
@@ -56,7 +51,7 @@ int numeric_check_2(int w)
 {
 	while (((cin>>w).fail())||(cin.peek()!='\n')||(w<=0))
 	{
-		cout << ("Enter integer number > 0.\n");
+		cout << ("Enter integer number > 0.")<<endl;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
@@ -67,11 +62,22 @@ int working_worshops_check(int ww, int w)
 {
 	while (((cin>>ww).fail())||(cin.peek()!='\n')||(ww<0)||(ww>w))
 	{
-		cout << ("Enter integer number > 0 and less than total amount of workshops.\n");
+		cout << ("Enter integer number > 0 and less than total amount of workshops.")<<endl;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 	}
 	return ww;
+}
+
+int check_opt(int menu)
+{
+	while (((cin >> menu).fail()) || (cin.peek() != '\n'))
+	{
+		cout << "Input number between 0 and 7" << endl;
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
+	}
+	return menu;
 }
 void clear_file()
 {
@@ -84,17 +90,13 @@ void clear_file()
 void case_1(Tube& tb)
 {
 	cout << "\nLength:";
-	cin >> tb.length;
 	tb.length = numeric_check(tb.length);
 	cout << "\nDiametr:";
-	cin >> tb.diametr;
 	tb.diametr = numeric_check(tb.diametr);
-	cout << "\nEnter 1 if tube is in repair and 2 if it works:";
-	cin >> tb.maintenance;
+	cout << "\nEnter 0 if tube is in repair and 1 if it works:";
 	tb.maintenance = maint_check(tb.maintenance);
 	cout << maint_check_2(tb.maintenance) << endl;
 }
-
 void case_2(KS& ks)
 {
 	cout << "\nName:";
@@ -102,10 +104,8 @@ void case_2(KS& ks)
 	cin.ignore(INT_MAX, '\n');
 	getline(cin,ks.name);
 	cout << "\nTotal number of workshops:";
-	cin >> ks.workshops;
 	ks.workshops = numeric_check_2(ks.workshops);
 	cout << "\nNumber of working workshops:";
-	cin >> ks.workingWork;
 	ks.workingWork = working_worshops_check(ks.workingWork, ks.workshops);
 	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
 	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
@@ -131,7 +131,7 @@ void case_4(Tube& tb)
 		cout << "There is no tube to edit.\n";
 	}
 	if (tb.maintenance != 0)
-		cout << "\nInput new tube status (Enter 1 if tube is in repair and 2 if it works):";
+		cout << "\nInput new tube status (Enter 0 if tube is in repair and 1 if it works):";
 	cin >> tb.maintenance;
 	tb.maintenance = maint_check(tb.maintenance);
 	cout << maint_check_2(tb.maintenance) << endl;
@@ -144,10 +144,8 @@ void case_5(KS& ks)
 	}
 	if (ks.workshops != 0)
 		cout << "\nWorkshops:";
-	cin >> ks.workshops;
 	ks.workshops = numeric_check_2(ks.workshops);
 	cout << "\nNumber of working workshops:";
-	cin >> ks.workingWork;
 	ks.workingWork = working_worshops_check(ks.workingWork, ks.workshops);
 	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
 	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
@@ -183,7 +181,7 @@ void case_6(Tube& tb, KS& ks)
 		cout << "There is no data about KS to load. Check file for tube information.\n";
 		ofstream fout;
 		fout.open("Запись.txt");
-		fout << "\nTube" << endl << "Length:" << tb.length << endl << "Diametr" << tb.diametr
+		fout << "\nTube" << endl << "Length:" << tb.length << endl << "Diametr:" << tb.diametr
 			<< endl << "Maintenance:" << tb.maintenance << endl;
 		fout.close();
 	}
@@ -207,14 +205,15 @@ void case_7(Tube&tb, KS&ks)
 
 int main()
 {
+	Tube tb;
+	KS ks;
 	int menu = -1;
 	while (menu)
 	{
 		cout << "1.Add new tube.\n" << "2.Add new KS.\n" << "3.Added objects.\n"
 			<< "4.Change tube.\n" << "5.Change KS.\n" << "6.Add to file\n"
 			<< "7.Load from file.\n" << "0.Exit\n" << ">";
-		cin >> menu;
-		menu = numeric_check(menu);
+		menu = check_opt(menu);
 		switch (menu)
 		{
 		case 1:
@@ -257,7 +256,7 @@ int main()
 			return 0;
 		}
 		default:
-			cout << "Input number between 0 and 7" << endl;
+			check_opt(menu);
 			break;
 		}
 	}
