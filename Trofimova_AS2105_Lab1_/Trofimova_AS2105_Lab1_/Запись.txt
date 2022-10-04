@@ -1,5 +1,6 @@
 
-Tube
-Length:2
-Diametr3
-Maintenance:1
+KS
+Name:ª
+Workshops:4
+Working workshops:1
+Efficiency: 25
