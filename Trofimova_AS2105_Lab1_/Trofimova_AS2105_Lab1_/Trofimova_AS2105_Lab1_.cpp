@@ -114,7 +114,7 @@ void added_objects(Tube& tb, KS& ks)
 	else
 		cout << "\nTube.\n" << "\nLength:" << tb.length << "\nDiametr:"
 		<< tb.diametr << "\nMaintanance:" << maintenance(tb.maintenance) << endl;
-	if (ks.name == "")
+	if (ks.workshops==-1)
 		cout << "There is no KS.\n";
 	else
 		cout << "\nKS.\n" << "\nName:" << ks.name << "\nTotal number of workshops:"
@@ -152,51 +152,54 @@ void edit_ks(KS& ks)
 }
 void load_to_file(Tube& tb, KS& ks)
 {
-	if ((ks.name == "") & (tb.length == 0))
+	if ((ks.workshops == -1) & (tb.length == 0))
 	{
 		cout << "There is no data to load.\n";
 	}
-	if ((ks.name != "") & (tb.length != 0))
+	if ((ks.workshops != -1) & (tb.length != 0))
 	{
 		cout << "Check file.\n";
 		ofstream fout;
 		fout.open("Запись.txt");
-		fout << "\nTube" << endl << "Length:" << tb.length << endl << "Diametr" << tb.diametr
-			<< endl << "Maintenance:" << tb.maintenance << endl
-			<< "\nKS" << endl << "Name:" << ks.name << endl << "Workshops:" << ks.workshops
-			<< endl << "Working workshops:" << ks.workingWork << endl << "Efficiency: " << ks.efficiency << endl;
+		fout  << tb.length << endl << tb.diametr
+			<< endl << maintenance(tb.maintenance) 
+			<< endl  << ks.name << endl << ks.workshops
+			<< endl  << ks.workingWork << endl << ks.efficiency << endl;
 		fout.close();
 	}
-	if ((tb.length == 0) & (ks.name != ""))
+	if ((tb.length == 0) & (ks.workshops != -1))
 	{
 		cout << "There is no data abot tube to load. Check file for ks information. \n";
 		ofstream fout;
 		fout.open("Запись.txt");
-		fout << "\nKS" << endl << "Name:" << ks.name << endl << "Workshops:" << ks.workshops
-			<< endl << "Working workshops:" << ks.workingWork << endl << "Efficiency: " << ks.efficiency << endl;
+		fout  << ks.name << endl << ks.workshops
+			<< endl << ks.workingWork << endl  << ks.efficiency << endl;
 		fout.close();
 	}
-	if ((ks.name == "") & (tb.length != 0))
+	if ((ks.workshops == -1) & (tb.length != 0))
 	{
 		cout << "There is no data about KS to load. Check file for tube information.\n";
 		ofstream fout;
 		fout.open("Запись.txt");
-		fout << "\nTube" << endl << "Length:" << tb.length << endl << "Diametr:" << tb.diametr
-			<< endl << "Maintenance:" << tb.maintenance << endl;
+		fout  << tb.length << endl << tb.diametr
+			<< endl << maintenance(tb.maintenance) << endl;
 		fout.close();
 	}
 }
 void read_from_file(Tube&tb, KS&ks)
 {
-	string line;
 	ifstream fin;
 	fin.open("Запись.txt");
 	if (fin.is_open())
 	{
-		while (getline(fin, line))
-		{
-			cout << line << endl;
-		}
+		fin >> tb.length >> tb.diametr >> tb.maintenance;
+		fin.ignore();
+		fin >> ks.name >> ks.workshops >> ks.workingWork >> ks.efficiency;
+		cout << "Data has been loaded." << endl;
+	}
+	else
+	{
+		cout << "There is no file." << endl;
 	}
 	fin.close();
 }
