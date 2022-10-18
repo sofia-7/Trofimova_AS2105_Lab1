@@ -1,5 +1,4 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <fstream>
 using namespace std;
@@ -7,13 +6,13 @@ using namespace std;
 struct Tube
 {
 	float length=0, diametr=0;
-	bool maintenance=0;
+	bool maintenance=2;
 };
 
 struct KS
 {
 	string name="";
-	int workshops=-1, workingWork=-1;
+	int workshops=0, workingWork=0;
 	float efficiency=0;
 };
 
@@ -114,7 +113,7 @@ void added_objects(Tube& tb, KS& ks)
 	else
 		cout << "\nTube.\n" << "\nLength:" << tb.length << "\nDiametr:"
 		<< tb.diametr << "\nMaintanance:" << maintenance(tb.maintenance) << endl;
-	if (ks.workshops==-1)
+	if (ks.workshops==0)
 		cout << "There is no KS.\n";
 	else
 		cout << "\nKS.\n" << "\nName:" << ks.name << "\nTotal number of workshops:"
@@ -123,11 +122,11 @@ void added_objects(Tube& tb, KS& ks)
 }
 void edit_tube(Tube& tb)
 {
-	if (tb.maintenance == 0)
+	if (tb.maintenance == 2)
 	{
 		cout << "There is no tube to edit.\n";
 	}
-	if (tb.maintenance != 0)
+	if (tb.maintenance != 2)
 	{
 		cout << "\nInput new tube status (Enter 0 if tube is in repair and 1 if it works):";
 		tb.maintenance = maintenance_check();
@@ -136,11 +135,11 @@ void edit_tube(Tube& tb)
 }
 void edit_ks(KS& ks)
 {
-	if (ks.workshops == -1)
+	if (ks.workshops == 0)
 	{
 		cout << "There are no workshops to edit.\n";
 	}
-	if (ks.workshops != -1)
+	if (ks.workshops != 0)
 	{
 		cout << "\nWorkshops:";
 		ks.workshops = integer_check();
@@ -152,22 +151,22 @@ void edit_ks(KS& ks)
 }
 void load_to_file(Tube& tb, KS& ks)
 {
-	if ((ks.workshops == -1) & (tb.length == 0))
+	if ((ks.workshops == 0) & (tb.length == 0))
 	{
 		cout << "There is no data to load.\n";
 	}
-	if ((ks.workshops != -1) & (tb.length != 0))
+	if ((ks.workshops != 0) & (tb.length != 0))
 	{
 		cout << "Check file.\n";
 		ofstream fout;
 		fout.open("Запись.txt");
 		fout  << tb.length << endl << tb.diametr
-			<< endl << maintenance(tb.maintenance) 
+			<< endl << tb.maintenance
 			<< endl  << ks.name << endl << ks.workshops
 			<< endl  << ks.workingWork << endl << ks.efficiency << endl;
 		fout.close();
 	}
-	if ((tb.length == 0) & (ks.workshops != -1))
+	if ((tb.length == 0) & (ks.workshops != 0))
 	{
 		cout << "There is no data abot tube to load. Check file for ks information. \n";
 		ofstream fout;
@@ -176,15 +175,29 @@ void load_to_file(Tube& tb, KS& ks)
 			<< endl << ks.workingWork << endl  << ks.efficiency << endl;
 		fout.close();
 	}
-	if ((ks.workshops == -1) & (tb.length != 0))
+	if ((ks.workshops == 0) & (tb.length != 0))
 	{
 		cout << "There is no data about KS to load. Check file for tube information.\n";
 		ofstream fout;
 		fout.open("Запись.txt");
 		fout  << tb.length << endl << tb.diametr
-			<< endl << maintenance(tb.maintenance) << endl;
+			<< endl << tb.maintenance << endl;
 		fout.close();
 	}
+}
+
+int count_lines()
+{
+	ifstream in;
+	in.open("Запись.txt");
+	string string;
+	int lines = 0;
+	while (in.peek() != EOF)
+	{
+		getline(in, string);
+		lines++;
+	}
+	return lines;
 }
 void read_from_file(Tube&tb, KS&ks)
 {
@@ -192,10 +205,23 @@ void read_from_file(Tube&tb, KS&ks)
 	fin.open("Запись.txt");
 	if (fin.is_open())
 	{
-		fin >> tb.length >> tb.diametr >> tb.maintenance;
-		fin.ignore();
-		fin >> ks.name >> ks.workshops >> ks.workingWork >> ks.efficiency;
-		cout << "Data has been loaded." << endl;
+		if (count_lines()>4)
+		{
+			fin >> tb.length >> tb.diametr >> tb.maintenance;
+			fin.ignore();
+			fin >> ks.name >> ks.workshops >> ks.workingWork >> ks.efficiency;
+			cout << "Data has been loaded." << endl;
+		}
+		if (count_lines() < 4)
+		{
+			fin >> tb.length >> tb.diametr >> tb.maintenance;
+			cout << "Data has been loaded." << endl;
+		}
+		if (count_lines() == 4)
+		{
+			fin >> ks.name >> ks.workshops >> ks.workingWork >> ks.efficiency;
+			cout << "Data has been loaded." << endl;
+		}
 	}
 	else
 	{
