@@ -1,7 +1,9 @@
 ﻿#include <iostream>
 #include <string>
 #include <fstream>
+#include <unordered_map>
 #include "Class.h"
+
 using namespace std;
 
 int check_menu()
@@ -21,16 +23,12 @@ void menu_list()
 		<< "4.Change tube.\n" << "5.Change KS.\n" << "6.Add to file\n"
 		<< "7.Load from file.\n" << "0.Exit\n" << ">";
 }
-/*void added_objects()
-{
-	tube.print_tube();
-	ks.print_ks();
-}*/
+
+
 int main()
 {
-
 	Tube tube;
-	KS ks;
+	unordered_map <int, Tube> tubeMap{};
 	int menu = -1;
 	while (menu)
 	{
@@ -38,24 +36,25 @@ int main()
 		menu = check_menu();
 		switch (menu)
 		{
+		case 0:
+		{
+			return 0;
+		}
 		case 1:
 		{
-			tube.add_tube();
-			break;
-		}
-		case 2:
-		{
-			ks.add_ks();
+			cin >> tube;
+			tubeMap.emplace(tube.MaxIdTb, tube);
+			cout << " " << endl;
 			break;
 		}
 		case 3:
 		{
-			tube.print_tube();
-			ks.print_ks();
-		}
-		case 0:
-		{
-			return 0;
+			cout << " " << endl;
+			if (tubeMap.size() != 0)
+			{
+				cout << tube << endl;
+			}
+			else cout << "There is no tube" << endl;
 		}
 		default:
 			cout << "Input correct number between 0 and 7.\n";
@@ -66,86 +65,6 @@ int main()
 }
 
 /*
-struct Tube
-{
-	float length=0, diametr=0;
-	bool maintenance=2;
-};
-
-struct KS
-{
-	string name="";
-	int workshops=0, workingWork=0;
-	float efficiency=0;
-};
-
-float number_check()
-{
-	float number;
-	while (((cin >> number).fail()) || (cin.peek() != '\n') || (number <= 0))
-	{
-		cout << ("Enter number > 0.\n");
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return number;
-}
-
-bool maintenance_check()
-{
-	bool Maintenance;
-	while (((cin >> Maintenance).fail()) || (cin.peek() != '\n'))
-	{
-		cout << ("Enter 0 or 1.\n");
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return Maintenance;
-}
-
-string maintenance(bool Maintenance)
-{
-	if (Maintenance == true)
-		return ("Tube is in maintenance\n");
-	else if (Maintenance == false)
-		return ("Tube works\n");
-}
-
-int integer_check()
-{
-	int workshop;
-	while (((cin>>workshop).fail())||(cin.peek()!='\n')||(workshop<=0))
-	{
-		cout << ("Enter integer number > 0.")<<endl;
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return workshop;
-}
-
-int working_worshops_check(int workshop)
-{
-	int working_workshop;
-	while (((cin>>working_workshop).fail())||(cin.peek()!='\n')||(working_workshop <=0)||(working_workshop >workshop))
-	{
-		cout << ("Enter integer number > 0 and less than total amount of workshops.")<<endl;
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return working_workshop;
-}
-
-int check_menu()
-{
-	int menu;
-	while (((cin >> menu).fail()) || (cin.peek() != '\n'))
-	{
-		cout << "Input number between 0 and 7" << endl;
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return menu;
-}
 void add_tube(Tube& tb)
 {
 	cout << "\nLength:";

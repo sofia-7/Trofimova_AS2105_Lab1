@@ -1,30 +1,40 @@
 #pragma once /* Защита от двойного подключения заголовочного файла */
 #include <string>
+# include <iostream>
 using namespace std;
 
 class Tube
 {
+	int id;
 public:
+	static int MaxIdTb;
+	string tb_name = "";
 	float length = 0;
 	float diametr = 0;
 	bool maintenance = 2;
 
-	void add_tube();
-	void print_tube();
+
+	int get_id() const;
+	void set_id();
+
+	friend istream& operator >> (istream& in, Tube tb);
+	friend ostream& operator << (ostream& out, const Tube& tb);
 };
 
-class KS
+/*class KS
 {
 public:
-	string name = "";
+	string ks_name = "";
 	int workshops = 0;
 	int workingWork = 0;
 	float efficiency = 0;
+	int ks_id = 0;
 
 	void add_ks();
 	void print_ks();
 
 };
+*/
 /*class Tube
 {
 public:
