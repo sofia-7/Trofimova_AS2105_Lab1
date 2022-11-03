@@ -2,7 +2,6 @@
 #include <iostream>
 #include "Class.h"
 #include <unordered_map>
-#include <vector>
 #include <tuple>
 using namespace std;
 
@@ -70,19 +69,15 @@ T numberCheck(T min = 0, T max = 10000000)
 	}
 	return x;
 }
-
 int Tube::MaxIdTb = 0;
-
 int Tube::get_id() const
 {
 	return id;
 }
-
 void Tube::set_id()
 {
 	id = ++MaxIdTb;
 }
-
 istream& operator >> (istream& in, Tube tb)
 {
 	tb.set_id();
@@ -120,23 +115,55 @@ ostream& operator << (ostream& out, const Tube& tb)
 }
 
 
-
-/*void KS::add_ks()
+int KS::MaxIdKs = 0;
+int KS::get_id() const
 {
-	cout << "Name:";
-	cin >> ks_name;
-	cout << "Workshops:";
-	cin >> workshops;
-	cout << "Working Workshops:";
-	cin >> workingWork;
-	cout << "Efficiency:";
-	cin >> efficiency;
+	return id;
 }
-void KS::print_ks()
+void KS::set_id()
 {
-	cout << "Name:" << ks_name 
-		<< "\nWorkshops:" << workshops 
-		<< "\nWorking workshops" << workingWork 
-		<< "\nEfficiency:" << efficiency << endl;
+	id = ++MaxIdKs;
 }
-*/
+int KS::get_workshops() const
+{
+	return workshops;
+}
+void KS::set_workshops()
+{
+	workshops = numberCheck(0, 10000000);
+}
+int KS::get_workingWork() const
+{
+	return workingWork;
+}
+void KS::set_workingWork()
+{
+	workingWork = numberCheck(0, 10000000);
+}
+istream& operator >> (istream& in, KS& ks)
+{
+	ks.set_id();
+	cout << "Name: ";
+	cin.ignore(INT_MAX, '\n');
+	getline(cin, ks.ks_name);
+	cout << "\nWorkshops: ";
+	ks.workshops = numberCheck(1, 10000000);
+	cout << "\Working workshops: ";
+	ks.workingWork = numberCheck(0, ks.workshops);
+	cout << "\nEfficiency: ";
+	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
+	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
+	return in;
+}
+ostream& operator << (ostream& out, const KS& ks)
+{
+	if (ks.workshops != 0)
+	{
+		out << "KS " << ks.id 
+			<< "\nName: " << ks.ks_name 
+			<< "\nWorkshops: " << ks.workshops 
+			<< "\nWorking workshops: " << ks.workingWork 
+			<< "\nEffiency: " << ks.efficiency;
+	}
+	return out;
+}

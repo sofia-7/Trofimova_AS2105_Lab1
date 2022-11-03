@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "Class.h"
 
+
 using namespace std;
 
 int check_menu()
@@ -28,7 +29,9 @@ void menu_list()
 int main()
 {
 	Tube tube;
-	unordered_map <int, Tube> tubeMap{};
+	KS ks;
+	unordered_map <int, Tube> tubeMap = {};
+	unordered_map <int, KS> KSMap = {};
 	int menu = -1;
 	while (menu)
 	{
@@ -47,14 +50,34 @@ int main()
 			cout << " " << endl;
 			break;
 		}
+		case 2:
+		{
+			cin >> ks;
+			KSMap.emplace(ks.MaxIdKs, ks);
+			cout << " " << endl;
+			break;
+		}
 		case 3:
 		{
 			cout << " " << endl;
 			if (tubeMap.size() != 0)
 			{
-				cout << tube << endl;
+				//for (const auto& [id, tube] : tubeMap)
+				//{
+					cout << tube << endl;
+				//}
 			}
-			else cout << "There is no tube" << endl;
+			else cout << "There are no tubes" << endl;
+			if (KSMap.size() != 0)
+			{
+				//for (const auto& [id, ks] : KSMap)
+				//{
+					cout << ks << endl;
+				//}
+			}
+			else
+				cout << "There are no KS" << endl;
+			break;
 		}
 		default:
 			cout << "Input correct number between 0 and 7.\n";
@@ -65,29 +88,6 @@ int main()
 }
 
 /*
-void add_tube(Tube& tb)
-{
-	cout << "\nLength:";
-	tb.length = number_check();
-	cout << "\nDiametr:";
-	tb.diametr = number_check();
-	cout << "\nEnter 0 if tube is in repair and 1 if it works:";
-	tb.maintenance = maintenance_check();
-	cout << maintenance(tb.maintenance) << endl;
-}
-void add_ks(KS& ks)
-{
-	cout << "\nName:";
-	cin.clear();
-	cin.ignore(INT_MAX, '\n');
-	getline(cin,ks.name);
-	cout << "\nTotal number of workshops:";
-	ks.workshops = integer_check();
-	cout << "\nNumber of working workshops:";
-	ks.workingWork = working_worshops_check(ks.workshops);
-	ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
-	cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
-}
 void added_objects(Tube& tb, KS& ks)
 {
 	if (tb.length == 0)
