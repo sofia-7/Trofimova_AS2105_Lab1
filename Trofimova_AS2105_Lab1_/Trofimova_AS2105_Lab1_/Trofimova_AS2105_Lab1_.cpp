@@ -1,23 +1,13 @@
 ﻿#include <iostream>
-#include <string>
 #include <fstream>
-#include <unordered_map>
+#include <string>
+#include <tuple>
 #include "Class.h"
-
+#include "check.h"
+#include <unordered_map>
 
 using namespace std;
 
-int check_menu()
-{
-	int menu;
-	while (((cin >> menu).fail()) || (cin.peek() != '\n'))
-	{
-		cout << "Input number between 0 and 7" << endl;
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	}
-	return menu;
-}
 void menu_list()
 {
 	cout << "1.Add new tube.\n" << "2.Add new KS.\n" << "3.Added objects.\n"
@@ -25,6 +15,70 @@ void menu_list()
 		<< "7.Load from file.\n" << "0.Exit\n" << ">";
 }
 
+Tube& select_tube(unordered_map<int, Tube>& tb)
+{
+	cout << "Input tube id: ";
+	int id = numberCheck<uint64_t>(1, tb.size());
+	if (tb.count(id) == 0)
+		cout << "There is no tube with such id.";
+	else
+		return tb[id];
+}
+KS& select_ks(unordered_map<int, KS>& ks)
+{
+	cout << "Input ks id: ";
+	int id = numberCheck<uint64_t>(1, ks.size());
+	if (ks.count(id) == 0)
+		cout << "There is no ks with such id.";
+	else
+		return ks[id];
+}
+void load(ifstream& in, unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& KSMap)
+{
+	Tube tb;
+	KS ks;
+	int i = 0;
+	int tube_num;
+	in >> tube_num;
+	while (tube_num != 0)
+	{
+		in >> tb;
+		for (auto& [id, tube] : tubeMap)
+		{
+			if (tb.get_id() == id)
+				i++;
+		}
+		if (i == 0)
+		{
+			tb.MaxIdTb++;
+			tubeMap.emplace(tb.MaxIdTb, tb);
+		}
+		else
+			i = 0;
+		--tube_num;
+	}
+
+	int j = 0;
+	int ks_num;
+	in >> ks_num;
+	while (ks_num != 0)
+	{
+		in >> ks;
+		for (auto& [id, kss] : KSMap)
+		{
+			if (ks.get_id() == id)
+				j++;
+		}
+		if (j == 0)
+		{
+			ks.MaxIdKs++;
+			KSMap.emplace(ks.MaxIdKs, ks);
+		}
+		else
+			j = 0;
+		--ks_num;
+	}
+}
 
 int main()
 {
@@ -36,7 +90,7 @@ int main()
 	while (menu)
 	{
 		menu_list();
-		menu = check_menu();
+		menu = numberCheck();
 		switch (menu)
 		{
 		case 0:
@@ -62,27 +116,90 @@ int main()
 			cout << " " << endl;
 			if (tubeMap.size() != 0)
 			{
-				//for (const auto& [id, tube] : tubeMap)
-				//{
+				for (const auto& [id, tube] : tubeMap)
+				{
 					cout << tube << endl;
-				//}
+				}
 			}
 			else cout << "There are no tubes" << endl;
 			if (KSMap.size() != 0)
 			{
-				//for (const auto& [id, ks] : KSMap)
-				//{
+				for (const auto& [id, ks] : KSMap)
+				{
 					cout << ks << endl;
-				//}
+				}
 			}
 			else
 				cout << "There are no KS" << endl;
 			break;
 		}
+		case 4:
+		{
+			if (tubeMap.size() > 0)
+			{
+				select_tube(tubeMap).edit_tube();
+			}
+			cout << " " << endl;
+			break;
+		}
+
+		case 5:
+		{
+			if (KSMap.size() > 0)
+			{
+				KS::edit_ks(select_ks(KSMap));
+			}
+			cout << " " << endl;
+			break;
+		}
+		case 6:
+		{  cout << "  " << endl;
+		ofstream out;
+		string fname;
+		cout << "Input file name: ";
+		cin.ignore(10000, '\n');
+		getline(cin, fname);
+		out.open(fname + ".txt", ios::out);
+		if (out.is_open())
+		{
+			out << tubeMap.size() << endl;
+			for (const auto& [id, tb2] : tubeMap)
+				out << tb2;
+			out << KSMap.size() << endl;
+			for (const auto& [id, ks2] : KSMap)
+				out << ks2;
+			out.close();
+			break;
+		}
+		else
+			cout << "Can't open file." << endl;
+		break;
+		}
+
+		case 7:
+		{
+			cout << "  " << endl;
+			ifstream in;
+			string fname2;
+			cout << "Input file name: ";
+			cin.ignore(10000, '\n');
+			getline(cin, fname2);
+			in.open(fname2 + ".txt", ios::in);
+
+			if (in.is_open())
+			{
+				load(in, tubeMap, KSMap);
+				in.close();
+			}
+
+			else
+				cout << "Can't open file.";
+			cout << "  " << endl;
+			break;
+		}
 		default:
 			cout << "Input correct number between 0 and 7.\n";
 			break;
-		}
 	}
 	return 0;
 }

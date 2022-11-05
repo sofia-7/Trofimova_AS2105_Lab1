@@ -1,11 +1,9 @@
-#include <string>
-#include <iostream>
+#include "check.h"
 #include "Class.h"
-#include <unordered_map>
-#include <tuple>
+
 using namespace std;
 
-float number_check()
+/*float number_check()
 {
 	float number;
 	while (((cin >> number).fail()) || (cin.peek() != '\n') || (number <= 0))
@@ -56,19 +54,8 @@ int working_worshops_check(int workshop)
 	}
 	return working_workshop;
 }
+*/
 
-template <typename T>
-T numberCheck(T min = 0, T max = 10000000)
-{
-	T x;
-	while ((std::cin >> x).fail() || x<min || x>max)
-	{
-		std::cin.clear();
-		std::cin.ignore(10000, '\n');
-		std::cout << "Please, type number (" << min << "-" << max << "): ";
-	}
-	return x;
-}
 int Tube::MaxIdTb = 0;
 int Tube::get_id() const
 {
@@ -112,6 +99,36 @@ ostream& operator << (ostream& out, const Tube& tb)
 		return out;
 	}
 	
+}
+void Tube::edit_tube(Tube& tb)
+{
+	if (tb.maintenance == 2)
+	{
+		cout << "There is no tube to edit.\n";
+	}
+	if (tb.maintenance != 2)
+	{
+		cout << "\nInput new tube status (Enter 0 if tube is in repair and 1 if it works):";
+		tb.maintenance = numberCheck(0, 1);
+	}
+}
+ifstream& operator >> (ifstream& in, Tube& tb)
+{
+	in >> tb.id;
+	in >> tb.tb_name;
+	in >> tb.diametr;
+	in >> tb.length;
+	in >> tb.maintenance;
+	return in;
+}
+ofstream& operator << (ofstream& out, const Tube& tb)
+{
+	out << tb.get_id() << endl
+		<< tb.tb_name << endl
+		<< tb.diametr << endl
+		<< tb.length << endl
+		<< tb.maintenance << endl;
+	return out;
 }
 
 
@@ -165,5 +182,40 @@ ostream& operator << (ostream& out, const KS& ks)
 			<< "\nWorking workshops: " << ks.workingWork 
 			<< "\nEffiency: " << ks.efficiency;
 	}
+	return out;
+}
+void KS::edit_ks(KS& ks)
+{
+	if (ks.workshops == 0)
+	{
+		cout << "There are no workshops to edit.\n";
+	}
+	if (ks.workshops != 0)
+	{
+		cout << "\nWorkshops:";
+		ks.workshops = numberCheck(1, 10000000);
+		cout << "\Working workshops: ";
+		ks.workingWork = numberCheck(0, ks.workshops);
+		ks.efficiency = float(ks.workingWork) / float(ks.workshops) * 100;
+		cout << ("\nEfficiency:") << ks.efficiency << "%" << endl;
+	}
+}
+ifstream& operator >> (ifstream& in, KS& ks)
+{
+	in >> ks.id;
+	in >> ks.ks_name;
+	in >> ks.workshops;
+	in >> ks.workingWork;
+	in >> ks.efficiency;
+	return in;
+}
+
+ofstream& operator << (ofstream& out, const KS& ks)
+{
+	out << ks.get_id() << endl
+		<< ks.ks_name << endl
+		<< ks.get_workshops() << endl
+		<< ks.get_workingWork() << endl
+		<< ks.efficiency << endl;
 	return out;
 }

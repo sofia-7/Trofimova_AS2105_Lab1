@@ -1,6 +1,7 @@
 #pragma once /* Защита от двойного подключения заголовочного файла */
 #include <string>
 # include <iostream>
+#include <fstream>
 using namespace std;
 
 class Tube
@@ -20,6 +21,9 @@ public:
 
 	friend istream& operator >> (istream& in, Tube tb);
 	friend ostream& operator << (ostream& out, const Tube& tb);
+	static void edit_tube(Tube& tb);
+	friend ifstream& operator >> (ifstream& in, Tube& p);
+	friend ofstream& operator << (ofstream& out, const Tube& p);
 };
 
 class KS
@@ -41,7 +45,9 @@ public:
 	int get_workingWork() const;
 	void set_workingWork();
 
-	friend std::istream& operator >> (istream& in, KS& ks);
-	friend std::ostream& operator << (ostream& out, const KS& ks);
-
+	friend istream& operator >> (istream& in, KS& ks);
+	friend ostream& operator << (ostream& out, const KS& ks);
+	static void edit_ks(KS& ks);
+	friend ifstream& operator >> (ifstream& in, KS& ks);
+	friend ofstream& operator << (ofstream& out, const KS& ks);
 };
