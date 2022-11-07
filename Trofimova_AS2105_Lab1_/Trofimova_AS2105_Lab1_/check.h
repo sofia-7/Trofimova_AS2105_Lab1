@@ -16,3 +16,10 @@ T numberCheck(T min = 0, T max = 10000000)
 	return x;
 }
 
+string maintenance_check(bool x)
+{
+	if (x == true)
+		return ("Tube works");
+	else if (x == false)
+		return ("Tube is repairing");
+}
