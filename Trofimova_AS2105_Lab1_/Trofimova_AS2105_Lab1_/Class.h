@@ -1,53 +1,55 @@
-#pragma once /* Защита от двойного подключения заголовочного файла */
-#include <string>
-# include <iostream>
+#pragma once
+#include <iostream>
 #include <fstream>
+#include <string>
+#include <vector>
+#include <float.h>
+#include <unordered_map>
+#include <unordered_set>
 using namespace std;
-
 class Tube
 {
-	int id;
-
 public:
-	static int MaxIdTb;
-	string tb_name;
-	float length;
-	float diametr;
-	bool maintenance;
+    static int max_id;
+    string name = "";
+    bool maintenance = 0;
+    Tube() {
+        idtb = max_id++;
+    }
+    friend istream& operator>> (istream& in, Tube& p);
+    friend ostream& operator<< (ostream& out, unordered_set <int>& p);
+    friend ostream& operator<< (ostream& out, Tube& p);
+    void edit_Pipe();
+    void save_tube(ofstream& file);
+    void load_tube(ifstream& file);
+    int get_id() { return idtb; }
 
+private:
+    double lenght = 0, diameter = 0;
+    int idtb = 0;
 
-	int get_id() const;
-	void set_id();
-
-	friend istream& operator >> (istream& in, Tube tb);
-	friend ostream& operator << (ostream& out, const Tube& tb);
-	static void edit_tube(Tube& tb);
-	friend ifstream& operator >> (ifstream& in, Tube& p);
-	friend ofstream& operator << (ofstream& out, const Tube& p);
 };
-
 class KS
 {
-	int id;
-	int workshops;
-	int workingWork;
+public: static int max_idd;
+      KS() {
+          idks = max_idd++;
+      }
+      friend istream& operator>> (istream& in, KS& p);
+      friend ostream& operator<< (ostream& out, KS& ks);
+      void save_ks(ofstream& file);
+      void edit_ks();
+      void load_ks(ifstream& file);
+      int get_idd() { return idks; }
+      double get_unused() { return (((double)workshop - (double)working_workshop) / (double)workshop) * 100; }
+      string name = "";
 
-public:
 
-	string ks_name;
-	int efficiency;
-	static int MaxIdKs;
-
-	int get_id() const;
-	void set_id();
-	int get_workshops() const;
-	void set_workshops();
-	int get_workingWork() const;
-	void set_workingWork();
-
-	friend istream& operator >> (istream& in, KS& ks);
-	friend ostream& operator << (ostream& out, const KS& ks);
-	static void edit_ks(KS& ks);
-	friend ifstream& operator >> (ifstream& in, KS& ks);
-	friend ofstream& operator << (ofstream& out, const KS& ks);
+private:
+    int  workshop, working_workshop, idks;
+    double effectiveness;
 };
+int Tube::max_id = 0;
+int KS::max_idd = 0;
+unordered_set <int> iddp;
+unordered_set <int> iddks;

@@ -15,3 +15,4 @@ T numberCheck(T min = 0, T max = 10000000)
 	}
 	return x;
 }
+
