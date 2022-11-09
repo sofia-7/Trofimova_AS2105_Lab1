@@ -5,7 +5,8 @@
 #include <float.h>
 #include <unordered_map>
 #include <unordered_set>
-#include "Class.h"
+#include "tube.h"
+#include "KS.h"
 #include "check.h"
 using namespace std;
 
@@ -62,59 +63,6 @@ void search_tb(unordered_map <int, Tube>& tubeMap, vector<int>& id) {
         id = search_tb_by_parametr(tubeMap, check_tb_maintenance, k);
     }
 }
-istream& operator>> (istream& in, Tube& tb)
-{
-    cout << "\n Index of tube: " << tb.idp;
-    cout << "\nInput name ";
-
-    cin.clear();
-    cin.ignore(INT_MAX, '\n');
-
-    getline(cin, tb.name);
-    cout << "\nLenght: ";
-    tb.lenght = numberCheck(0.0, DBL_MAX);
-    cout << "\nDiameter: ";
-    tb.diameter = numberCheck(0.0, DBL_MAX);
-    cout << "\nChoose maintenance of tube (0 if repairing, 1 if works): ";
-    tb.maintenance = numberCheck(0, 1);
-    cout << maintenance_check(tb.maintenance) << endl;
-    return in;
-}
-istream& operator>> (istream& in, KS& ks)
-{
-    cout << "\nIndex of ks: " << ks.idks;
-    cout << "\nName ";
-    cin.clear();
-    cin.ignore(INT_MAX, '\n');
-    getline(cin, ks.name);
-    cout << "\nWorkshops: ";
-    ks.workshop = numberCheck(0, INT_MAX);
-    cout << "\nWorking workshops: ";
-    ks.working_workshop = numberCheck(0, ks.workshop);
-    cout << "\nEffectiveness: ";
-    ks.effectiveness = numberCheck(0, 100);
-    return in;
-}
-ostream& operator<< (ostream& out, Tube& tb) {
-    out << "\nIndex of tube: " << tb.idp  << "\nName: " << tb.name << "\nLenght: "
-        << tb.lenght << "\nDiameter : " << tb.diameter
-        << "\nStatus: " << maintenance_check(tb.maintenance) << endl;
-    return out;
-}
-ostream& operator<< (ostream& out, KS& ks) {
-    out << "\nIndex of KS: " << ks.idks << "\nName: " << ks.name << "\nWorkshops: " << ks.workshop
-        << "\nWorking workshops: " << ks.working_workshop << "\nEffectiveness: "
-        << ks.effectiveness << "%" << endl;
-    return out;
-}
-ostream& operator<< (ostream& out, unordered_set <int>& tb) {
-    out << "Exicting id: ";
-    for (auto& i : tb) {
-        out << i << " ";
-    }
-    out << endl;
-    return out;
-}
 void search_ks(unordered_map <int, KS>& KSMap, vector<int>& id) {
     int x;
     cout << "Search KS by 1.name 2.percentage of unused shops" << endl;
@@ -130,7 +78,7 @@ void search_ks(unordered_map <int, KS>& KSMap, vector<int>& id) {
     }
     else {
         double k;
-        cout << "Enter the percentage of unused shops:" << endl;
+        cout << "Enter the percentage of unworking workshops:" << endl;
         k = numberCheck(0, 100);
         id = search_ks_by_parametr(KSMap, check_unworking, k);
     }
@@ -144,43 +92,20 @@ void information(unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& KSMa
         cout << ks.second << endl;
     }
 }
-void KS::edit_ks() {
-    cout << "Workshops: " << workshop << endl;
-    cout << "Working workshop: " << working_workshop << endl;
-    cout << "Enter new number of working workshops:" << endl;
-    working_workshop = numberCheck(0, workshop);
-}
-void Tube::edit_Tube() {
-    cout << "Status: " << maintenance_check(maintenance) << endl;
-    cout << "Enter new maintenance of tube (0 if in repairing, 1 if works):" << endl;
-    maintenance = numberCheck(0, 1);
-    cout << maintenance_check(maintenance);
-}
-void Tube::save_tube(ofstream& file) {
-    file << idp << endl << name << endl << lenght << endl << diameter << endl << maintenance << endl;
-}
-void KS::save_ks(ofstream& file) {
-    file << idks << endl << name << endl
-        << workshop << endl << working_workshop << endl << effectiveness << endl;
-}
-void Tube::load_tube(ifstream& file) {
-    file >> idp;
-    getline(file, name);
-    getline(file, name);
-    file >> lenght;
-    file >> diameter;
-    file >> maintenance;
-}
-void KS::load_ks(ifstream& file) {
-    file >> idks;
-
-    getline(file, name);
-    getline(file, name);
-    file >> workshop;
-    file >> working_workshop;
-    file >> effectiveness;
+ostream& operator<< (ostream& out, unordered_set <int>& tb) {
+    out << "Exicting id: ";
+    for (auto& i : tb) {
+        out << i << " ";
+    }
+    out << endl;
+    return out;
 }
 
+void Menu()
+{
+    cout << "\n1.Add tube \n2.Add KS\n3.View all objects " <<
+        "\n4.Edit tube \n5.Edit KS \n6.Save \n7.Load \n8.Search tube \n9.Search KS \n0.Exit\n";
+}
 void load_to_file(unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& KSMap)
 {
     string x;
@@ -199,12 +124,6 @@ void load_to_file(unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& KSM
     }
     cout << "Data is loaded";
 }
-void Menu()
-{
-    cout << "\n1.Add tube \n2.Add KS\n3.View all objects " <<
-        "\n4.Edit tube \n5.Edit KS \n6.Save \n7.Load \n8.Search tube \n9.Search KS \n0.Exit\n";
-}
-
 void load_from_file(unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& KSMap)
 {
     string x;
@@ -256,11 +175,13 @@ void search_tube(unordered_map<int, Tube>& tubeMap)
         cout << "There is no tube to find" << endl;
 }
 void tube_edit(unordered_map<int, Tube>& tubeMap)
+
 {
     int edit;
     int id1;
     int x;
     Tube tb;
+    vector <int> idp;
     if (tubeMap.size() != 0) {
         cout << "1.Choose one tube \n2.Choose tubes \n3.Delete tube" << endl;;
         edit = numberCheck(1, 3);
@@ -269,10 +190,8 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
             cout << iddtb;
             id1 = numberCheck(0, (int)tubeMap.size());
             tubeMap[id1].edit_Tube();
-
         }
         if (edit == 2) {
-            vector <int> idp;
             cout << "Choose tubes by 1.filter 2.id" << endl;
             x = numberCheck(1, 2);
             if (x == 1) {
@@ -294,7 +213,6 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
                     y = numberCheck(0, Tube::max_id - 1);
                     if (tubeMap.find(y) != tubeMap.end())
                         ids.insert(y);
-
                 }
                 cout << "Enter new maintenance (0 if repairing, 1 if works)" << endl;
                 bool s;
@@ -304,14 +222,62 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
             }
         }
         if (edit == 3) {
-            cout << "Enter the id of tube you want to delete" << endl;
-            int n;
-            n = numberCheck(0, Tube::max_id);
-            tubeMap.erase(tubeMap.find(n));
-            iddtb.erase(iddtb.find(n));
-            cout << "Tube was deleted";
+            cout << "1. identifier of one tube you want to delete 2.delete some tubes" << endl;
+            int d;
+            d = numberCheck(1, 2);
+            if (d == 1) {
+                cout << iddtb;
+                cout << "Enter id of pipe you want to delete" << endl;
+                int n;
+                n = numberCheck(0, (int)tubeMap.size());
+                if (iddtb.find(n) != iddtb.end()) {
+                    tubeMap.erase(tubeMap.find(n));
+                }
+            }
+            else {
+                unordered_set <int> id;
+                cout << "1.delete by filter 2.delete by id" << endl;
+                int n;
+                n = numberCheck(1, 2);
+                int x;
+                if (n == 2) {
+                    cout << iddtb;
+                    cout << "Enter the number of pipe you want to edit" << endl;;
+                    int y;
+                    y = numberCheck(1, (int)tubeMap.size());
+                    cout << "Enter idetifiers of tubes" << endl;
+                    for (int i = 0; i < y; i++) {
+                        cin >> x;
+                        if (iddtb.find(x) != iddtb.end()) {
+                            id.insert(x);
+                        }
+                        else
+                        {
+                            i = i - 1;
+                            cout << "There is no such tube" << endl;
+                        }
+                    }
+                    for (auto& pi : id) {
+                        tubeMap.erase(tubeMap.find(pi));
+                    }
+                }
+                else {
+                    search_tb(tubeMap, idp);
+                    if (idp.size() != 0)
+                    {
+                        for (auto& i : idp)
+                            tubeMap.erase(tubeMap.find(i));
+                    }
+                    else
+                    {
+                        cout << "There is no such pipe" << endl;
+                    }
+                }
+            }
         }
-    }
+
+        cout << "Pipe was deleted";
+        }
     else
         cout << "There is no tube to edit" << endl;
 }
@@ -319,7 +285,7 @@ void edit_ks(unordered_map<int, KS>& KSMap)
 {
     vector <int> idks;
     if (KSMap.size() != 0) {
-        cout << "1.Edit one KS 2.Edit KSs 3.Delete KS" << endl;
+        cout << "1.Edit one KS 2.Edit KS 3.Delete KS" << endl;
         int edit;
         edit = numberCheck(1, 3);
         if (edit == 1) {
@@ -413,14 +379,15 @@ void ks_search(unordered_map<int, KS>& KSMap)
 }
 
 int main()
-{
-    int menu = -1;
+{   int menu = -1;
     unordered_map<int, Tube> tubeMap;
     unordered_map<int, KS> KSMap;
-    while (menu) {
+    while (menu)
+    {
         Menu();
         menu = numberCheck(0, 9);
-        switch (menu) {
+        switch (menu)
+        {
         case 1: {
             iddtb.insert(Tube::max_id);
             Tube tb;
@@ -429,6 +396,7 @@ int main()
             break;
         }
         case 2: {
+            iddks.insert(KS::max_idd);
             KS ks;
             cin >> ks;
             KSMap.insert({ ks.get_idd(), ks });
@@ -447,7 +415,7 @@ int main()
             break;
         }
         case 6: {
-            load_to_file(tubeMap,KSMap);
+            load_to_file(tubeMap, KSMap);
             break;
         }
         case 7: {
@@ -465,8 +433,6 @@ int main()
         case 0: {
             return 0;
         }
-        default: cout << "Input correct number (0-9)";
-            break;
         }
     }
     return 0;

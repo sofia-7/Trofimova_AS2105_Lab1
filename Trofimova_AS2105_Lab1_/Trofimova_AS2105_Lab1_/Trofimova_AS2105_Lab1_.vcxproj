@@ -127,11 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="tube.cpp" />
+    <ClCompile Include="KS.cpp" />
     <ClCompile Include="Trofimova_AS2105_Lab1_.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="check.h" />
-    <ClInclude Include="Class.h" />
+    <ClInclude Include="tube.h" />
+    <ClInclude Include="KS.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

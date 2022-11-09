@@ -16,6 +16,7 @@ public:
     Tube() {
         idp = max_id++;
     }
+    string maintenance_check(bool x);
     friend istream& operator>> (istream& in, Tube& tb);
     friend ostream& operator<< (ostream& out, unordered_set <int>& tb);
     friend ostream& operator<< (ostream& out, Tube& tb);
@@ -50,7 +51,6 @@ public: static int max_idd;
 private:
     int idks;
 };
-int Tube::max_id = 0;
-int KS::max_idd = 0;
-unordered_set <int> iddtb;
-unordered_set <int> iddks;
+
+static unordered_set <int> iddtb;
+static unordered_set <int> iddks;
