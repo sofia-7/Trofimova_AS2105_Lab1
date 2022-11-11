@@ -17,7 +17,7 @@ using namespace std;
 
 istream& operator>> (istream& in, Tube& tb)
 {
-    cout << "\n Index of tube: " << tb.idp;
+    cout << "\n Index of tube: " << tb.id;
     cout << "\nInput name ";
 
     cin.clear();
@@ -35,7 +35,7 @@ istream& operator>> (istream& in, Tube& tb)
 }
 istream& operator>> (istream& in, KS& ks)
 {
-    cout << "\nIndex of ks: " << ks.idks;
+    cout << "\nIndex of ks: " << ks.id;
     cout << "\nName ";
     cin.clear();
     cin.ignore(INT_MAX, '\n');
@@ -49,13 +49,13 @@ istream& operator>> (istream& in, KS& ks)
     return in;
 }
 ostream& operator<< (ostream& out, Tube& tb) {
-    out << "\nIndex of tube: " << tb.idp << "\nName: " << tb.name << "\nLenght: "
+    out << "\nIndex of tube: " << tb.id << "\nName: " << tb.name << "\nLenght: "
         << tb.lenght << "\nDiameter : " << tb.diameter
         << "\nStatus: " << tb.maintenance_check(tb.maintenance) << endl;
     return out;
 }
 ostream& operator<< (ostream& out, KS& ks) {
-    out << "\nIndex of KS: " << ks.idks << "\nName: " << ks.name << "\nWorkshops: " << ks.workshop
+    out << "\nIndex of KS: " << ks.id << "\nName: " << ks.name << "\nWorkshops: " << ks.workshop
         << "\nWorking workshops: " << ks.working_workshop << "\nEffectiveness: "
         << ks.effectiveness << "%" << endl;
     return out;
@@ -73,14 +73,14 @@ void Tube::edit_Tube() {
     cout << maintenance_check(maintenance);
 }
 void Tube::save_tube(ofstream& file) {
-    file << idp << endl << name << endl << lenght << endl << diameter << endl << maintenance << endl;
+    file << id << endl << name << endl << lenght << endl << diameter << endl << maintenance << endl;
 }
 void KS::save_ks(ofstream& file) {
-    file << idks << endl << name << endl
+    file << id << endl << name << endl
         << workshop << endl << working_workshop << endl << effectiveness << endl;
 }
 void Tube::load_tube(ifstream& file) {
-    file >> idp;
+    file >> id;
     getline(file, name);
     getline(file, name);
     file >> lenght;
@@ -88,8 +88,8 @@ void Tube::load_tube(ifstream& file) {
     file >> maintenance;
 }
 void KS::load_ks(ifstream& file) {
-    file >> idks;
-    iddks.insert(idks);
+    file >> id;
+    id_ks.insert(id);
     getline(file, name);
     getline(file, name);
     file >> workshop;

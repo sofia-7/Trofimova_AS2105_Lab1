@@ -15,7 +15,6 @@ using tube_filter = bool (*) (Tube& tb, T param);
 template <typename T>
 using ks_filter = bool(*) (KS& ks, T param);
 template <typename T>
-
 vector <int> search_tb_by_parametr(unordered_map <int, Tube>& tubeMap, tube_filter<T> f, T param) {
     vector <int> search;
     for (auto& tube : tubeMap) {
@@ -46,10 +45,10 @@ bool check_unworking(KS& ks, double ws) {
     return (ks.get_unused_ws() >= ws);
 }
 void search_tb(unordered_map <int, Tube>& tubeMap, vector<int>& search) {
-    int x;
+    int lookFor;
     cout << "Search tube by 1.name 2.maintenance" << endl;
-    x = numberCheck(1, 2);
-    if (x == 1) {
+    lookFor = numberCheck(1, 2);
+    if (lookFor == 1) {
         string name;
         cout << "Enter the name of tube: " << endl;
         cin.clear();
@@ -58,17 +57,17 @@ void search_tb(unordered_map <int, Tube>& tubeMap, vector<int>& search) {
         search = search_tb_by_parametr(tubeMap, check_tb_name, name);
     }
     else {
-        bool k;
-        cout << "Enter maintenance of tube (0 if repairing, 1 if in work): " << endl;
-        k = numberCheck(0, 1);
-        search = search_tb_by_parametr(tubeMap, check_tb_maintenance, k);
+        bool maintenance;
+        cout << "Enter maintenance of tube (0 if in maintenance, 1 if in work): " << endl;
+        maintenance = numberCheck(0, 1);
+        search = search_tb_by_parametr(tubeMap, check_tb_maintenance, maintenance);
     }
 }
 void search_ks(unordered_map <int, KS>& KSMap, vector<int>& search) {
-    int x;
+    int lookFor;
     cout << "Search KS by 1.name 2.percentage of unused shops" << endl;
-    x = numberCheck(1, 2);
-    if (x == 1) {
+    lookFor = numberCheck(1, 2);
+    if (lookFor == 1) {
         string name;
         cout << "Enter the name of KS: " << endl;
         cin.clear();
@@ -78,10 +77,10 @@ void search_ks(unordered_map <int, KS>& KSMap, vector<int>& search) {
 
     }
     else {
-        double k;
+        double percent;
         cout << "Enter the percentage of unworking workshops:" << endl;
-        k = numberCheck(0, 100);
-        search = search_ks_by_parametr(KSMap, check_unworking, k);
+        percent = numberCheck(0, 100);
+        search = search_ks_by_parametr(KSMap, check_unworking, percent);
     }
 
 }
@@ -158,15 +157,16 @@ void load_from_file(unordered_map<int, Tube>& tubeMap, unordered_map<int, KS>& K
 
         }
         cout << "Data is loaded";
+        file.close();
     }
 }
 void search_tube(unordered_map<int, Tube>& tubeMap)
 {
-    vector <int> x;
+    vector <int> search;
     if (tubeMap.size() != 0) {
-        search_tb(tubeMap, x);
-        if (x.size() != 0) {
-            for (auto& i : x)
+        search_tb(tubeMap, search);
+        if (search.size() != 0) {
+            for (auto& i : search)
                 cout << tubeMap[i] << endl;
         }
         else
@@ -179,7 +179,7 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
 {
     int edit;
     int id1;
-    int filter;
+    int option;
     Tube tb;
     vector <int> id;
     if (tubeMap.size() != 0) 
@@ -195,8 +195,8 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
         if (edit == 2) 
         {
             cout << "Choose tubes by 1.filter 2.id" << endl;
-            filter = numberCheck(1, 2);
-            if (filter == 1) {
+            option = numberCheck(1, 2);
+            if (option == 1) {
                 search_tb(tubeMap, id);
                 //cout << "Enter new maintenance (0 if repairing, 1 if works)" << endl;
                 bool maintenance;
@@ -204,54 +204,54 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
                 for (auto& i : id)
                     tubeMap[i].maintenance = maintenance;
             }
-            if (filter == 2) {
+            if (option == 2) {
                 unordered_set <int> ids;
                 cout << "Enter the number of identifiers of tube you want to edit" << endl;
-                int n;
-                n = numberCheck(0, Tube::max_id_tb);
+                int number;
+                number = numberCheck(0, Tube::max_id_tb);
                 cout << "Enter idetifiers of tubes" << endl;
-                int y;
-                for (int i = 0; i < n; i++) {
-                    y = numberCheck(0, Tube::max_id_tb - 1);
-                    if (tubeMap.find(y) != tubeMap.end())
-                        ids.insert(y);
+                int numId;
+                for (int i = 0; i < number; i++) {
+                    numId = numberCheck(0, Tube::max_id_tb - 1);
+                    if (tubeMap.find(numId) != tubeMap.end())
+                        ids.insert(numId);
                 }
                 cout << "Enter new maintenance (0 if repairing, 1 if works)" << endl;
-                bool s;
-                s = numberCheck(0, 1);
+                bool maintenance;
+                maintenance = numberCheck(0, 1);
                 for (auto& i : ids)
-                    tubeMap[i].maintenance = s;
+                    tubeMap[i].maintenance = maintenance;
             }
         }
         if (edit == 3) {
-            cout << "1. identifier of one tube you want to delete 2.delete some tubes" << endl;
-            int d;
-            d = numberCheck(1, 2);
-            if (d == 1) {
+            cout << "1. delete one tube 2.delete some tubes" << endl;
+            int del;
+            del = numberCheck(1, 2);
+            if (del == 1) {
                 cout << id_tb;
-                cout << "Enter id of pipe you want to delete" << endl;
-                int n;
-                n = numberCheck(0, (int)tubeMap.size());
-                if (id_tb.find(n) != id_tb.end()) {
-                    tubeMap.erase(tubeMap.find(n));
+                cout << "Enter id of tube you want to delete" << endl;
+                int id;
+                id = numberCheck(0, (int)tubeMap.size());
+                if (id_tb.find(id) != id_tb.end()) {
+                    tubeMap.erase(tubeMap.find(id));
                 }
             }
             else {
                 unordered_set <int> idtb;
                 cout << "1.delete by filter 2.delete by id" << endl;
-                int n;
-                n = numberCheck(1, 2);
-                int x;
-                if (n == 2) {
+                int del;
+                del = numberCheck(1, 2);
+                int idTB;
+                if (del == 2) {
                     cout << id_tb;
-                    cout << "Enter the number of pipe you want to edit" << endl;;
-                    int y;
-                    y = numberCheck(1, (int)tubeMap.size());
+                    cout << "Enter the number of tubes you want to edit" << endl;;
+                    int number;
+                    number = numberCheck(1, (int)tubeMap.size());
                     cout << "Enter idetifiers of tubes" << endl;
-                    for (int i = 0; i < y; i++) {
-                        cin >> x;
-                        if (id_tb.find(x) != id_tb.end()) {
-                            idtb.insert(x);
+                    for (int i = 0; i < number; i++) {
+                        cin >> idTB;
+                        if (id_tb.find(idTB) != id_tb.end()) {
+                            idtb.insert(idTB);
                         }
                         else
                         {
@@ -259,8 +259,8 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
                             cout << "There is no such tube" << endl;
                         }
                     }
-                    for (auto& pi : idtb) {
-                        tubeMap.erase(tubeMap.find(pi));
+                    for (auto& tube : idtb) {
+                        tubeMap.erase(tubeMap.find(tube));
                     }
                 }
                 else {
@@ -272,13 +272,13 @@ void tube_edit(unordered_map<int, Tube>& tubeMap)
                     }
                     else
                     {
-                        cout << "There is no such pipe" << endl;
+                        cout << "There is no such tube" << endl;
                     }
                 }
             }
         }
 
-        cout << "Pipe was deleted";
+        cout << "tube was deleted";
         }
     else
         cout << "There is no tube to edit" << endl;
@@ -297,66 +297,62 @@ void edit_ks(unordered_map<int, KS>& KSMap)
             KSMap[id].edit_ks();
         }
         if (edit == 2) {
-            unordered_set <int> idw;
+            unordered_set <int> ids;
             cout << "Choose  by 1.filter 2.id" << endl;
-            int n;
-            n = numberCheck(1, 2);
-            if (n == 2) {
+            int option;
+            option = numberCheck(1, 2);
+            if (option == 2) {
                 cout << "Enter the number of ks you want to edit";
-                int y;
-                y = numberCheck(0, KS::max_id_ks);
+                int number;
+                number = numberCheck(0, KS::max_id_ks);
                 cout << "Enter idetifiers of KSs" << endl;
-                for (int i = 0; i < y; i++) {
+                for (int i = 0; i < number; i++) {
                     if (KSMap.find(i) != KSMap.end())
-                        idw.insert(i);
-
+                        ids.insert(i);
                 }
-                for (auto& i : idw)
+                for (auto& i : ids)
                     KSMap[i].edit_ks();
-
             }
             else {
                 search_ks(KSMap, idks);
                 for (auto& i : idks)
                     KSMap[i].edit_ks();
             }
-
         }
         if (edit == 3) {
-            cout << "1. identifier of one KS you want to delete 2.delete some KS" << endl;
-            int d;
-            d = numberCheck(1, 2);
-            if (d == 1) {
+            cout << "1. delete one KS 2.delete some KS" << endl;
+            int del;
+            del = numberCheck(1, 2);
+            if (del == 1) {
                 cout << "Enter id of KS you want to delete" << endl;
-                int n;
-                n = numberCheck(0, KS::max_id_ks);
-                KSMap.erase(KSMap.find(n));
+                int id;
+                id = numberCheck(0, KS::max_id_ks);
+                KSMap.erase(KSMap.find(id));
             }
             else {
-                unordered_set <int> idd;
+                unordered_set <int> idKS;
                 cout << "1.delete by filter 2.delete by id" << endl;
-                int n;
-                n = numberCheck(1, 2);
-                if (n == 2) {
+                int del;
+                del = numberCheck(1, 2);
+                if (del == 2) {
                     cout << "Enter the number of ks you want to edit";
-                    int y;
-                    y = numberCheck(0, KS::max_id_ks);
+                    int number;
+                    number = numberCheck(0, KS::max_id_ks);
                     cout << "Enter idetifiers of KSs" << endl;
-                    for (int i = 0; i < y; i++) {
+                    for (int i = 0; i < number; i++) {
                         if (KSMap.find(i) != KSMap.end())
-                            idd.insert(i);
+                            idKS.insert(i);
                     }
-                    for (auto& i : idd)
+                    for (auto& i : idKS)
                         KSMap.erase(KSMap.find(i));
                 }
                 else {
                     search_ks(KSMap, idks);
                     for (auto& i : idks)
                         KSMap.erase(KSMap.find(i));
-                    for (auto& i : iddks)
-                        iddks.erase(i);
+                    for (auto& i : id_ks)
+                        id_ks.erase(i);
                 }
-
                 cout << "KS was deleted";
             }
         }
@@ -366,11 +362,11 @@ void edit_ks(unordered_map<int, KS>& KSMap)
 }
 void ks_search(unordered_map<int, KS>& KSMap)
 {
-    vector <int> x;
+    vector <int> search;
     if (KSMap.size() != 0) {
-        search_ks(KSMap, x);
-        if (x.size() != 0) {
-            for (auto& i : x)
+        search_ks(KSMap, search);
+        if (search.size() != 0) {
+            for (auto& i : search)
                 cout << KSMap[i] << endl;
         }
         else
@@ -396,7 +392,7 @@ int main()
             break;
         }
         case 2: {
-            iddks.insert(KS::max_id_ks);
+            id_ks.insert(KS::max_id_ks);
             KS ks;
             cin >> ks;
             KSMap.insert({ ks.get_id_ks(), ks });

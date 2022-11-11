@@ -14,7 +14,7 @@ public:
     string name = "";
     bool maintenance = 0;
     Tube() {
-        idp = max_id_tb++;
+        id = max_id_tb++;
     }
     string maintenance_check(bool x);
     friend istream& operator>> (istream& in, Tube& tb);
@@ -23,34 +23,34 @@ public:
     void edit_Tube();
     void save_tube(ofstream& file);
     void load_tube(ifstream& file);
-    int get_id_tb() { return idp; }
+    int get_id_tb() { return id; }
     double lenght = 0, diameter = 0;
 
 private:
 
-    int idp = 0;
+    int id = 0;
 
 };
 class KS
 {
 public: static int max_id_ks;
       KS() {
-          idks = max_id_ks++;
+          id = max_id_ks++;
       }
       friend istream& operator>> (istream& in, KS& tb);
       friend ostream& operator<< (ostream& out, KS& ks);
       void save_ks(ofstream& file);
       void edit_ks();
       void load_ks(ifstream& file);
-      int get_id_ks() { return idks; }
+      int get_id_ks() { return id; }
       double get_unused_ws() { return (((double)workshop - (double)working_workshop) / (double)workshop) * 100; }
       string name = "";
       int  workshop, working_workshop;
       double effectiveness;
 
 private:
-    int idks;
+    int id;
 };
 
 static unordered_set <int> id_tb;
-static unordered_set <int> iddks;
+static unordered_set <int> id_ks;
