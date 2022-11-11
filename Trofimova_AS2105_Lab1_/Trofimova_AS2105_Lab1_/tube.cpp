@@ -2,8 +2,8 @@
 #include "check.h"
 
 
-int Tube::max_id = 0;
-int KS::max_idd = 0;
+int Tube::max_id_tb = 0;
+int KS::max_id_ks = 0;
 
 string Tube:: maintenance_check(bool x)
 {
