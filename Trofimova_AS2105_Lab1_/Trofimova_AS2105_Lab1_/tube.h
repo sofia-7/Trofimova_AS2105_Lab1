@@ -18,39 +18,20 @@ public:
     }
     string maintenance_check(bool x);
     friend istream& operator>> (istream& in, Tube& tb);
-    friend ostream& operator<< (ostream& out, unordered_set <int>& tb);
+    //friend ostream& operator<< (ostream& out, unordered_set <int>& tb);
     friend ostream& operator<< (ostream& out, Tube& tb);
     void edit_Tube();
     void save_tube(ofstream& file);
     void load_tube(ifstream& file);
     int get_id_tb() { return id; }
-    double lenght = 0, diameter = 0;
+    
 
 private:
 
     int id = 0;
+    double lenght = 0, diameter = 0;
 
 };
-class KS
-{
-public: static int max_id_ks;
-      KS() {
-          id = max_id_ks++;
-      }
-      friend istream& operator>> (istream& in, KS& tb);
-      friend ostream& operator<< (ostream& out, KS& ks);
-      void save_ks(ofstream& file);
-      void edit_ks();
-      void load_ks(ifstream& file);
-      int get_id_ks() { return id; }
-      double get_unused_ws() { return (((double)workshop - (double)working_workshop) / (double)workshop) * 100; }
-      string name = "";
-      int  workshop, working_workshop;
-      double effectiveness;
 
-private:
-    int id;
-};
 
-static unordered_set <int> id_tb;
-static unordered_set <int> id_ks;
+//static unordered_set <int> id_tb;
